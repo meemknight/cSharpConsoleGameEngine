@@ -10,9 +10,12 @@ namespace cSharpConsoleGameEngine
     {
         static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
-            Console.ReadKey();
 
+            Demo inst = new Demo();
+            inst.Create(10, 10);
+
+            inst.run();
         }
     }
 }
+
