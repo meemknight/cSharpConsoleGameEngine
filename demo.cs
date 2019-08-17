@@ -16,7 +16,15 @@ namespace cSharpConsoleGameEngine
 
         public override void update(float dTime)
         {
-            draw(2, 3, 'o');
+
+
+            drawLine(2, 3, 12, 20, Pixel.create('0', ConsoleColor.DarkMagenta));
+
+            if (isKeyPressed('A'))
+            {
+                draw(2, 3, Pixel.create('o', ConsoleColor.Cyan));
+            }
+
         }
     }
 }

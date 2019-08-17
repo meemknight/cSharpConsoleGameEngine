@@ -12,7 +12,8 @@ namespace cSharpConsoleGameEngine
         {
 
             Demo inst = new Demo();
-            inst.Create(10, 10);
+            inst.Create(20, 20);
+
 
             inst.run();
         }
