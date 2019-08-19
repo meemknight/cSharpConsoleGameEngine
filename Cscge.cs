@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Threading;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 
@@ -33,6 +34,8 @@ namespace cSharpConsoleGameEngine
             return c;
         }
 
+        public static Pixel def = defaultColor();
+
         public static Pixel defaultColor(char chr)
         {
             Pixel c;
@@ -47,8 +50,6 @@ namespace cSharpConsoleGameEngine
             return Pixel.defaultColor(c);
         }
     }
-
-
 
     abstract class Cscge
     {
@@ -88,9 +89,9 @@ namespace cSharpConsoleGameEngine
                 }
         }
 
-        public abstract void update(float dTime);
+        public abstract bool update(float dTime);
 
-        public virtual void onCreate() { }
+        public virtual bool onCreate() { return true; }
 
         public void draw(int x, int y, Pixel p)
         {
@@ -106,6 +107,27 @@ namespace cSharpConsoleGameEngine
                 {
                     draw(i, j, p);
                 }
+            }
+        }
+
+        public void drawString(int x, int y, string s)
+        {
+            drawString(x, y, s, Pixel.defaultColor());
+        }
+
+        /// <summary>
+        /// This function writes text with the color specified int the color param.
+        /// If the text excedes the bounds it will be clipped.
+        /// </summary>
+        /// <param name="x">pos on the x</param>
+        /// <param name="y">pos on the y</param>
+        /// <param name="s">the string</param>
+        /// <param name="color">the color</param>
+        public void drawString(int x, int y, string s, Pixel color)
+        {
+            for (int i = 0; i < s.Length; i++)
+            {
+                draw(x + i, y, Pixel.create(s[i], color.foreground, color.background));
             }
         }
 
@@ -174,6 +196,13 @@ namespace cSharpConsoleGameEngine
 
         }
 
+        public void drawTriangle(int x1, int y1, int x2, int y2, int x3, int y3, Pixel p)
+        {
+            drawLine(x1, y1, x2, y2, p);
+            drawLine(x2, y2, x3, y3, p);
+            drawLine(x3, y3, x1, y1, p);
+        }
+
         private void render()
         {
             Console.SetCursorPosition(0, 0);
@@ -185,15 +214,19 @@ namespace cSharpConsoleGameEngine
                     Console.ForegroundColor = pixels[i, j].foreground;
                     Console.Write(pixels[i, j].character);
                 }
-                Console.WriteLine();
+                Console.Write('\n');
             }
         }
 
         public void run()
         {
-            Console.SetWindowSize(width + 1, height + 1);
+            //Console.SetWindowSize(width + 1, height + 1);
 
-            onCreate();
+            if (onCreate() == false)
+            {
+                return;
+            };
+
             var time = new Stopwatch();
             time.Start();
             float deltaTime = 0;
@@ -206,7 +239,10 @@ namespace cSharpConsoleGameEngine
                 deltaTime /= 1000f;
                 time.Restart();
 
-                update(deltaTime);
+                if (update(deltaTime) == false)
+                {
+                    break;
+                }
 
                 render();
                 Clear(clearColor);

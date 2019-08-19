@@ -9,22 +9,25 @@ namespace cSharpConsoleGameEngine
 {
     class Demo : Cscge
     {
-        public override void onCreate()
+        public override bool onCreate()
         {
-
+            return true;
         }
 
-        public override void update(float dTime)
-        {
 
+        public override bool update(float dTime)
+        {
 
             drawLine(2, 3, 12, 20, Pixel.create('0', ConsoleColor.DarkMagenta));
 
+
             if (isKeyPressed('A'))
             {
-                draw(2, 3, Pixel.create('o', ConsoleColor.Cyan));
+                drawString(2, 2, "Test here", Pixel.create(' ', ConsoleColor.DarkCyan));
             }
 
+
+            return true;
         }
     }
 }
